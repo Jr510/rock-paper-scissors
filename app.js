@@ -1,8 +1,9 @@
 
 let computerScore = 0;
 let playerScore = 0;
+let playerSelection;
+let computerSelection;
 
-// Randomly return "Rock", "Paper", or "Scissors" for Computer
 
 function computerPlay() {
   const cpuNumber  = Math.floor(Math.random() * 3) + 1;
@@ -16,59 +17,76 @@ function computerPlay() {
   }
 }
 
-// Prompt Player to choose answer against Computer and return outcome
-
 function playRound(playerSelection, computerSelection) {
 
-  const playerChoice = prompt("Welcome to Rock, Paper, or Scissors! Good luck! (Best out of 5)", playerSelection).toLowerCase();
-  const newPlayerChoice = playerChoice.charAt(0).toUpperCase() + playerChoice.slice(1);
+  const gameDiv = document.createElement("div");
+  const div1 = document.getElementById("play-buttons");
   computerSelection = computerPlay();
 
-  if(newPlayerChoice === computerSelection) {
-    console.log(`It's a tie!  ${newPlayerChoice} and ${computerSelection}`); 
+  if(playerSelection === computerSelection) {
+      gameDiv.textContent = `It's a tie!  Player: ${playerScore}, Computer: ${computerScore}`; 
+      div1.appendChild(gameDiv);
 
-  } else if (newPlayerChoice === "Rock" && computerSelection === "Paper") {
-    computerScore++;
-    console.log(`Computer Wins!  ${computerSelection} covers ${newPlayerChoice}!`);
+  } else if (playerSelection === "Rock" && computerSelection === "Paper" ||
+              playerSelection === "Scissors" && computerSelection === "Rock" || 
+              playerSelection === "Paper" && computerSelection === "Scissors") {
 
-  } else if (newPlayerChoice === "Paper" && computerSelection === "Rock") {
-    playerScore++;
-    console.log(`Player Wins!  ${newPlayerChoice} covers ${computerSelection}!`);
+      computerScore++;
 
-  } else if (newPlayerChoice === "Scissors" && computerSelection === "Rock") {
-    computerScore++;
-    console.log(`Computer Wins!  ${computerSelection} breaks ${newPlayerChoice}!`);
+      if (computerScore === 5) {
 
-  } else if (newPlayerChoice === "Rock" && computerSelection === "Scissors") {
-    playerScore++;
-    console.log(`Player Wins!  ${newPlayerChoice} breaks ${computerSelection}!`);
+        gameDiv.textContent = `Computer Wins the Game!  Player: ${playerScore}, Computer: ${computerScore}`;
+        gameDiv.style.color = "red";
+        div1.appendChild(gameDiv);  
+        resetScores();
 
-  } else if (newPlayerChoice === "Paper" && computerSelection === "Scissors") {
-    computerScore++;
-    console.log(`Computer Wins!  ${computerSelection} cuts ${newPlayerChoice}!`);
+      } else {
 
-  } else if (newPlayerChoice === "Scissors" && computerSelection === "Paper") {
-    playerScore++;
-    console.log(`Player Wins!  ${computerSelection} cuts ${newPlayerChoice}!`);
-  }
+        gameDiv.textContent = `Computer Wins round!  Player: ${playerScore}, Computer: ${computerScore}`;
+        div1.appendChild(gameDiv);
 
-}
+      }
 
-function game() {
-  for (let i = 0; i < 5; i++) {
-    playRound();
-  }
-  if(playerScore < computerScore) {
-    console.log("********************");
-    console.log("PlayerWins!");
-    console.log("********************");
-  } else if(computerScore > playerScore) {
-    console.log("********************");
-    console.log("Computer Wins!");
-    console.log("********************");
-  } else {
-    console.log("********************");
-    console.log("Tie Game!");
-    console.log("********************");
+  } else if (playerSelection === "Paper" && computerSelection === "Rock" ||
+              playerSelection === "Rock" && computerSelection === "Scissors" ||
+              playerSelection === "Scissors" && computerSelection === "Paper") {
+
+      playerScore++;
+
+      if (playerScore === 5) {
+
+        gameDiv.textContent = `Player Wins the Game!  Player: ${playerScore}, Computer: ${computerScore}`;
+        gameDiv.style.color = "green";
+        div1.appendChild(gameDiv);  
+        resetScores();
+
+      } else {
+
+        gameDiv.textContent = `Player Wins round!  Player: ${playerScore}, Computer: ${computerScore}`;
+        div1.appendChild(gameDiv);   
+
+      }
   }
 }
+
+function resetScores() {
+
+  computerScore = 0;
+  playerScore = 0;
+  
+}
+
+
+const buttons = document.querySelectorAll('button');
+
+buttons.forEach((button) => {
+  
+  button.addEventListener('click', () => {
+
+    playerSelection = button.id;
+
+    playRound(playerSelection, computerSelection);
+
+  });
+
+});
